@@ -25,16 +25,19 @@ class ArticlesController extends Controller
         return view('articles.create', ['categories' => $categories]);
     }
 
-    public function post(){
-        $article = new Article();
-        $article->title = request('title');
-        $article->description = request('description');
-        $article->category_id = request('category_id');
-        $article->price = request('price');
-        $article->quantity = request('quantity');
-        $article->save();
+    public function post(Request $request){
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|url',
+            'category_id' => 'required|integer|exists:categories,id_category',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+        ]);
 
-        return redirect('/dashboard');
+        Article::create($validated);
+
+        return redirect('/dashboard')->with('status', 'Article créé.');
     }
 
     public function edit(int $id)
@@ -54,14 +57,19 @@ class ArticlesController extends Controller
         if (Auth::user()->role !== 'admin') {
             return redirect('/dashboard');
         }
-        $article->title = $request->input('title');
-        $article->description = $request->input('description');
-        $article->category_id = $request->input('category_id');
-        $article->price = $request->input('price');
-        $article->quantity = $request->input('quantity');
-        $article->save();
 
-        return redirect('/dashboard');
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|url',
+            'category_id' => 'required|integer|exists:categories,id_category',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+        ]);
+
+        $article->update($validated);
+
+        return redirect('/dashboard')->with('status', 'Article mis à jour.');
     }
 
     public function show(int $id)

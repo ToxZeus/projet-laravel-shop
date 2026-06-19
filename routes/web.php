@@ -16,6 +16,20 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/articles/show/{id}', [ArticlesController::class, 'show'])->name('articles.show');
 
+    // Cart 
+    Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+
+    // Order
+    Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+
+    // Categorie admin
+    Route::get('/categories/create', [\App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories/create', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
+
     Route::get('/articles/create', [ArticlesController::class, 'create'])->name('articles.create');
     Route::post('/articles/create', [ArticlesController::class, 'post'])->name('articles.post');
     Route::get('/articles/edit/{id}', [ArticlesController::class, 'edit'])->name('articles.edit');

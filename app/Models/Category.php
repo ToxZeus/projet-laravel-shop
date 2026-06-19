@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Category extends Model
 {
     protected $primaryKey = 'id_category';
+    protected $fillable = ['name'];
 
     public function articles(): HasMany
     {

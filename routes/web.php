@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{id}/status', [\App\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::delete('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy');
 
     // Admin - Users
     Route::get('/admin/users', [\App\Http\Controllers\UserController::class, 'index'])->name('admin.users.index');

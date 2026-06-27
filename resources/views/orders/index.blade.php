@@ -32,7 +32,17 @@
                     <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                     <td>{{ number_format($order->total, 2, ',', ' ') }} €</td>
                     <td>{{ $order->status }}</td>
-                    <td><a href="{{ route('orders.show', $order->id_order) }}" class="text-blue-600">Voir</a></td>
+                    <td class="flex items-center gap-3 py-1">
+                        <a href="{{ route('orders.show', $order->id_order) }}" class="text-blue-600">Voir</a>
+                        @if(auth()->user()->role === 'admin')
+                        <form method="POST" action="{{ route('orders.destroy', $order->id_order) }}"
+                              onsubmit="return confirm('Supprimer la commande #{{ $order->id_order }} ?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-600">Supprimer</button>
+                        </form>
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

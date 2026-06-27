@@ -36,6 +36,20 @@ class OrderController extends Controller
         return view('orders.show', ['order' => $order]);
     }
 
+    // Suppression commande (admin seulement)
+    public function destroy(int $id)
+    {
+        $user = Auth::user();
+
+        if ($user->role !== 'admin') {
+            return redirect()->route('orders.index')->with('info', 'Accès refusé.');
+        }
+
+        Order::findOrFail($id)->delete();
+
+        return redirect()->route('orders.index')->with('status', 'Commande supprimée.');
+    }
+
     // Mise à jour du statut (admin seulement)
     public function updateStatus(int $id)
     {

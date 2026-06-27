@@ -36,6 +36,29 @@ class OrderController extends Controller
         return view('orders.show', ['order' => $order]);
     }
 
+    // Mise à jour du statut (admin seulement)
+    public function updateStatus(int $id)
+    {
+        $user = Auth::user();
+
+        if ($user->role !== 'admin') {
+            return redirect()->route('orders.index')->with('info', 'Accès refusé.');
+        }
+
+        $allowed = ['en attente', 'validée', 'expédiée', 'livrée', 'annulée'];
+        $status = request()->input('status');
+
+        if (!in_array($status, $allowed)) {
+            return back()->with('info', 'Statut invalide.');
+        }
+
+        $order = Order::findOrFail($id);
+        $order->status = $status;
+        $order->save();
+
+        return back()->with('status', 'Statut mis à jour.');
+    }
+
     // Valider le panier
     public function store()
     {

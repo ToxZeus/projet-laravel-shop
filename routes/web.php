@@ -27,8 +27,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
 
     // Categorie admin
+    Route::get('/categories', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
     Route::get('/categories/create', [\App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories/create', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/edit/{id}', [\App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
+    Route::post('/categories/update', [\App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
+    Route::get('/categories/delete/{id}', [\App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
 
     Route::get('/articles/create', [ArticlesController::class, 'create'])->name('articles.create');
     Route::post('/articles/create', [ArticlesController::class, 'post'])->name('articles.post');

@@ -6,7 +6,7 @@
             @if(auth()->user()->role == 'admin')
                         <a href="/articles/create">Créer un article</a>
                         -
-                        <a href="{{ route('categories.create') }}">Créer une catégorie</a>
+                        <a href="{{ route('categories.index') }}">Gérer les catégories</a>
             @endif
         </h2>
     </x-slot>

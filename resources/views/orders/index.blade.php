@@ -49,7 +49,11 @@
         </table>
     @endif
 
-    <div class="mt-6">
+    <div class="mt-4">
+        {{ $orders->links() }}
+    </div>
+
+    <div class="mt-4">
         <a href="/dashboard" class="text-blue-600">Retour aux articles</a>
     </div>
 </div>

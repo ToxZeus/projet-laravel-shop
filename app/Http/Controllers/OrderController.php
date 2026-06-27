@@ -15,9 +15,9 @@ class OrderController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'admin') {
-            $orders = Order::with('user')->orderByDesc('id_order')->get();
+            $orders = Order::with('user')->orderByDesc('id_order')->paginate(15);
         } else {
-            $orders = Order::where('user_id', $user->id)->orderByDesc('id_order')->get();
+            $orders = Order::where('user_id', $user->id)->orderByDesc('id_order')->paginate(15);
         }
 
         return view('orders.index', ['orders' => $orders]);

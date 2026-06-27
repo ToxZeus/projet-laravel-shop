@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
     // Cart 
     Route::get('/cart', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
+    Route::patch('/cart/{id}', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/remove/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
 
     // Payment
@@ -31,6 +32,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
     Route::get('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
     Route::patch('/orders/{id}/status', [\App\Http\Controllers\OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+    // Admin - Users
+    Route::get('/admin/users', [\App\Http\Controllers\UserController::class, 'index'])->name('admin.users.index');
+    Route::patch('/admin/users/{id}/role', [\App\Http\Controllers\UserController::class, 'updateRole'])->name('admin.users.updateRole');
+    Route::delete('/admin/users/{id}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('admin.users.destroy');
 
     // Categorie admin
     Route::get('/categories', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');

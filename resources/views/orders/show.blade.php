@@ -13,7 +13,7 @@
             @csrf
             @method('PATCH')
             <label class="text-sm font-medium">Statut :</label>
-            <select name="status" class="border rounded px-2 py-1 text-sm">
+            <select name="status" class="border rounded px-2 py-1 text-sm bg-white text-gray-900">
                 @foreach(['en attente', 'validée', 'expédiée', 'livrée', 'annulée'] as $s)
                     <option value="{{ $s }}" @selected($order->status === $s)>{{ ucfirst($s) }}</option>
                 @endforeach

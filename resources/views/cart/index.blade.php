@@ -22,11 +22,20 @@
             <tbody>
                 @foreach($items as $item)
                 <tr class="border-t">
-                    <td>{{ $item->article->title }}</td>
-                    <td>{{ $item->quantity }}</td>
-                    <td>{{ number_format($item->article->price, 2, ',', ' ') }} €</td>
-                    <td>{{ number_format($item->article->price * $item->quantity, 2, ',', ' ') }} €</td>
-                    <td>
+                    <td class="py-2">{{ $item->article->title }}</td>
+                    <td class="py-2">
+                        <form method="POST" action="{{ route('cart.update', $item->id_cart) }}" class="flex items-center gap-1">
+                            @csrf
+                            @method('PATCH')
+                            <input type="number" name="quantity" value="{{ $item->quantity }}" min="1"
+                                   max="{{ $item->article->quantity }}"
+                                   class="border rounded w-16 px-1 py-0.5 text-sm text-center bg-white text-gray-900">
+                            <button type="submit" class="text-blue-600 text-sm">OK</button>
+                        </form>
+                    </td>
+                    <td class="py-2">{{ number_format($item->article->price, 2, ',', ' ') }} €</td>
+                    <td class="py-2">{{ number_format($item->article->price * $item->quantity, 2, ',', ' ') }} €</td>
+                    <td class="py-2">
                         <form method="POST" action="{{ route('cart.remove', $item->id_cart) }}">
                             @csrf
                             <button type="submit" class="text-red-600">Supprimer</button>

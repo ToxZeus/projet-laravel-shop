@@ -53,6 +53,25 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('status', 'Article ajouté au panier.');
     }
 
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        $user = Auth::user();
+        $item = Cart::with('article')->where('id_cart', $id)->where('user_id', $user->id)->firstOrFail();
+
+        if ($request->quantity > $item->article->quantity) {
+            return back()->with('info', 'Stock insuffisant : il reste ' . $item->article->quantity . ' en stock.');
+        }
+
+        $item->quantity = $request->quantity;
+        $item->save();
+
+        return back()->with('status', 'Quantité mise à jour.');
+    }
+
     public function remove(Request $request, $id)
     {
         $user = Auth::user();

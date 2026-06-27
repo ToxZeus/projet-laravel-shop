@@ -45,15 +45,12 @@ class OrderController extends Controller
             return redirect()->route('orders.index')->with('info', 'Accès refusé.');
         }
 
-        $allowed = ['en attente', 'validée', 'expédiée', 'livrée', 'annulée'];
-        $status = request()->input('status');
-
-        if (!in_array($status, $allowed)) {
-            return back()->with('info', 'Statut invalide.');
-        }
+        request()->validate([
+            'status' => 'required|in:en attente,validée,expédiée,livrée,annulée',
+        ]);
 
         $order = Order::findOrFail($id);
-        $order->status = $status;
+        $order->status = request()->input('status');
         $order->save();
 
         return back()->with('status', 'Statut mis à jour.');

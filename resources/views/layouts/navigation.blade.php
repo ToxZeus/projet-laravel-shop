@@ -21,6 +21,14 @@
                     <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.*')">
                         {{ __('Mes commandes') }}
                     </x-nav-link>
+                    @if(auth()->user()->role === 'admin')
+                    <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                        {{ __('Catégories') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                        {{ __('Utilisateurs') }}
+                    </x-nav-link>
+                    @endif
                 </div>
             </div>
 

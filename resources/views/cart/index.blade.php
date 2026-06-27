@@ -44,9 +44,9 @@
             </tfoot>
         </table>
 
-        <form method="POST" action="{{ route('orders.store') }}" class="mt-4">
+        <form method="POST" action="{{ route('payment.checkout') }}" class="mt-4">
             @csrf
-            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Commander</button>
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Payer avec Stripe</button>
         </form>
     @endif
 

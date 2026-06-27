@@ -21,6 +21,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/remove/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
 
+    // Payment
+    Route::post('/payment/checkout', [\App\Http\Controllers\PaymentController::class, 'checkout'])->name('payment.checkout');
+    Route::get('/payment/success', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/cancel', [\App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
+
     // Order
     Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');

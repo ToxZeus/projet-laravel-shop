@@ -39,6 +39,19 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
+        <!-- Captcha -->
+        <div class="mt-4">
+            <x-input-label for="captcha" value="Vérification" />
+            <div class="flex items-center gap-3 mt-1">
+                {!! captcha_img('default', ['id' => 'captcha-img']) !!}
+                <button type="button" onclick="document.getElementById('captcha-img').src='{{ captcha_src() }}?'+Date.now()" class="text-sm text-gray-500 underline">
+                    Rafraîchir
+                </button>
+            </div>
+            <x-text-input id="captcha" class="block mt-2 w-full" type="text" name="captcha" required autocomplete="off" placeholder="Entrez le code affiché" />
+            <x-input-error :messages="$errors->get('captcha')" class="mt-2" />
+        </div>
+
         <div class="flex items-center justify-end mt-4">
             <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
                 {{ __('Already registered?') }}

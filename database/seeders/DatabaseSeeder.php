@@ -15,8 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -28,9 +26,13 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
+        // Clients supplémentaires pour des commandes réalistes en soutenance
+        User::factory()->count(10)->create();
+
         $this->call([
             CategorySeeder::class,
             ArticleSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }

@@ -1,28 +1,29 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight flex items-center gap-2">
+            <x-icon name="plus" class="w-5 h-5 text-indigo-500" /> Créer une catégorie
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="max-w-3xl mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Créer une catégorie</h1>
+    <div class="py-8">
+        <div class="max-w-lg mx-auto sm:px-6 lg:px-8 space-y-6">
+            @include('partials._flash')
 
-    @if($errors->any())
-        <div class="mb-4 text-red-700">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+            <div class="card card-body">
+                <form action="{{ route('categories.store') }}" method="post" class="space-y-4">
+                    @csrf
+                    <div>
+                        <x-input-label value="Nom" />
+                        <x-text-input type="text" name="name" class="w-full" value="{{ old('name') }}" required />
+                    </div>
+                    <div class="flex gap-3 pt-2">
+                        <x-primary-button>
+                            <x-icon name="plus" class="w-4 h-4" /> Créer
+                        </x-primary-button>
+                        <a href="{{ route('categories.index') }}" class="btn-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
         </div>
-    @endif
-
-    <form action="{{ route('categories.store') }}" method="post">
-        @csrf
-        <div class="mb-2">
-            <label class="block">Nom :</label>
-            <input type="text" name="name" class="border rounded px-2 py-1 text-gray-900 w-full" value="{{ old('name') }}" />
-        </div>
-        <div>
-            <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded">Créer</button>
-        </div>
-    </form>
-</div>
-@endsection
+    </div>
+</x-app-layout>

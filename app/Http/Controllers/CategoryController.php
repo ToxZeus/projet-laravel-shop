@@ -2,64 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
-    private function adminOnly()
-    {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/dashboard')->with('info', 'Accès refusé.');
-        }
-        return null;
-    }
+    // Toutes les méthodes sont protégées par le middleware 'admin' sur les routes.
 
     public function index()
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
         $categories = Category::withCount('articles')->get();
         return view('categories.index', compact('categories'));
     }
 
     public function create()
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
         return view('categories.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        Category::create(['name' => $validated['name']]);
+        Category::create($request->validated());
 
         return redirect()->route('categories.index')->with('status', 'Catégorie créée.');
     }
 
     public function edit($id)
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
         $category = Category::findOrFail($id);
         return view('categories.edit', compact('category'));
     }
 
-    public function update(Request $request)
+    public function update(UpdateCategoryRequest $request)
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'id'   => 'required|integer|exists:categories,id_category',
-        ]);
+        $validated = $request->validated();
 
         $category = Category::findOrFail($validated['id']);
         $category->update(['name' => $validated['name']]);
@@ -69,8 +46,6 @@ class CategoryController extends Controller
 
     public function destroy($id)
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
         $category = Category::findOrFail($id);
         $category->delete();
 

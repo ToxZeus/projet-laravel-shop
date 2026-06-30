@@ -2,91 +2,98 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreArticleRequest;
+use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ArticlesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::paginate(9);
-        return view('dashboard', ['articles' => $articles]);
+        $search     = $request->input('search');
+        $categoryId = $request->integer('category') ?: null;
+
+        $articles = Article::search($search)
+            ->byCategory($categoryId)
+            ->with('category')
+            ->paginate(9)
+            ->withQueryString();
+
+        $categories = Category::orderBy('name')->get();
+
+        return view('dashboard', compact('articles', 'categories', 'search', 'categoryId'));
     }
 
     public function create()
     {
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/dashboard')
-            ->with('info', 'Vous ne pouvez pas créer de produit.');
-        }
-        $categories = Category::all();
-        return view('articles.create', ['categories' => $categories]);
+        $categories = Category::orderBy('name')->get();
+        return view('articles.create', compact('categories'));
     }
 
-    public function post(Request $request){
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|url',
-            'category_id' => 'required|integer|exists:categories,id_category',
-            'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
-        ]);
+    public function post(StoreArticleRequest $request)
+    {
+        $data = $request->validated();
 
-        Article::create($validated);
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('articles', 'public');
+        } else {
+            unset($data['image']);
+        }
 
-        return redirect('/dashboard')->with('status', 'Article créé.');
+        Article::create($data);
+
+        return redirect()->route('dashboard')->with('status', 'Article créé.');
     }
 
     public function edit(int $id)
     {
-        $article = Article::findOrFail($id);
-        $categories = Category::all();
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/dashboard')
-            ->with('info', 'Vous ne pouvez pas modifier ce produit.');
-        }
-        return view('articles.update', ['article' => $article, 'categories' => $categories]);
+        $article    = Article::findOrFail($id);
+        $categories = Category::orderBy('name')->get();
+
+        return view('articles.update', compact('article', 'categories'));
     }
 
-    public function update(Request $request)
+    public function update(UpdateArticleRequest $request)
     {
-        $article = Article::findOrFail($request->id);
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/dashboard');
+        $data    = $request->validated();
+        $article = Article::findOrFail($data['id']);
+
+        if ($request->hasFile('image')) {
+            // Supprime l'ancienne image si stockée localement
+            if ($article->image && !str_starts_with($article->image, 'http')) {
+                Storage::disk('public')->delete($article->image);
+            }
+            $data['image'] = $request->file('image')->store('articles', 'public');
+        } else {
+            unset($data['image']);
         }
 
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'image' => 'nullable|url',
-            'category_id' => 'required|integer|exists:categories,id_category',
-            'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
-        ]);
+        unset($data['id']);
+        $article->update($data);
 
-        $article->update($validated);
-
-        return redirect('/dashboard')->with('status', 'Article mis à jour.');
+        return redirect()->route('dashboard')->with('status', 'Article mis à jour.');
     }
 
     public function show(int $id)
     {
-        $article = Article::findOrFail($id);
-        return view('articles.show', ['article' => $article]);
+        $article = Article::with('category')->findOrFail($id);
+        return view('articles.show', compact('article'));
     }
 
     public function delete(int $id)
     {
         $article = Article::findOrFail($id);
-        if (Auth::user()->role !== 'admin') {
-            return redirect('/dashboard')
-            ->with('info', 'Vous ne pouvez pas supprimer ce produit.');
-        }
-        $article->delete();
 
-        return redirect('/dashboard');
+        // Supprime l'image locale si elle existe
+        if ($article->image && !str_starts_with($article->image, 'http')) {
+            Storage::disk('public')->delete($article->image);
+        }
+
+        $article->delete(); // soft delete
+
+        return redirect()->route('dashboard')->with('status', 'Article supprimé.');
     }
 }

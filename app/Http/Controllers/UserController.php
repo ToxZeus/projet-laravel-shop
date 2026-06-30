@@ -7,18 +7,10 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    private function adminOnly()
-    {
-        if (Auth::user()->role !== 'admin') {
-            return redirect()->route('dashboard')->with('info', 'Accès refusé.');
-        }
-        return null;
-    }
+    // Toutes les méthodes sont protégées par le middleware 'admin' sur les routes.
 
     public function index()
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
         $users = User::withCount('orders')->orderBy('name')->get();
 
         return view('admin.users.index', compact('users'));
@@ -26,8 +18,6 @@ class UserController extends Controller
 
     public function updateRole(int $id)
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
         request()->validate([
             'role' => 'required|in:user,admin',
         ]);
@@ -46,8 +36,6 @@ class UserController extends Controller
 
     public function destroy(int $id)
     {
-        if ($redirect = $this->adminOnly()) return $redirect;
-
         $user = User::findOrFail($id);
 
         if ($user->id === Auth::id()) {

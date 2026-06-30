@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓 Révision Soutenance Laravel — Cours interactif</title>
+    <link rel="stylesheet" href="/cours/css/style.css">
+</head>
+<body>
+    <!-- ===== EN-TÊTE ===== -->
+    <header class="topbar">
+        <div class="brand">🎓 <strong>Révision Soutenance</strong> <span class="muted">Laravel Shop</span></div>
+        <div class="tools">
+            <input id="search" type="search" placeholder="🔎 Rechercher un mot, une ligne…" autocomplete="off">
+            <button id="themeBtn" title="Changer de thème">🌙</button>
+            <button id="printBtn" title="Imprimer / PDF">🖨️</button>
+        </div>
+    </header>
+
+    <!-- ===== SÉLECTEUR DE FONCTIONNALITÉ ===== -->
+    <nav id="featurePills" class="pills" aria-label="Fonctionnalités"></nav>
+
+    <!-- ===== ONGLETS ===== -->
+    <nav class="tabs">
+        <button class="tab active" data-tab="code">📄 Code &amp; Explication</button>
+        <button class="tab" data-tab="schema">🗺️ Schéma MVC</button>
+        <button class="tab" data-tab="quiz">❓ Quiz du jury</button>
+        <button class="tab" data-tab="glossaire">📖 Glossaire</button>
+    </nav>
+
+    <!-- ===== CORPS ===== -->
+    <main class="layout">
+        <!-- Colonne 1 : arborescence -->
+        <aside class="tree-pane">
+            <h2 class="pane-title">🗂️ Arborescence</h2>
+            <p class="hint">Le parcours du code, fichier par fichier. Clique un fichier pour l'ouvrir.</p>
+            <div id="tree" class="tree"></div>
+        </aside>
+
+        <!-- Zone centrale (change selon l'onglet) -->
+        <section class="work">
+            <!-- Onglet CODE -->
+            <div id="panel-code" class="panel active">
+                <div class="step-head">
+                    <div class="step-where">
+                        <span id="stepLayer" class="layer-badge"></span>
+                        <span id="stepPath" class="path"></span>
+                    </div>
+                    <div class="step-role" id="stepRole"></div>
+                    <div class="step-nav">
+                        <button id="prevBtn">◀ Étape précédente</button>
+                        <span id="stepCount" class="count"></span>
+                        <button id="nextBtn">Étape suivante ▶</button>
+                    </div>
+                </div>
+                <div class="split">
+                    <div class="code-col">
+                        <div class="col-label">CODE</div>
+                        <pre id="code" class="code"></pre>
+                    </div>
+                    <div class="exp-col">
+                        <div class="col-label">EXPLICATION (ligne par ligne)</div>
+                        <div id="exp" class="exp"></div>
+                        <div id="oral" class="oral"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Onglet SCHÉMA -->
+            <div id="panel-schema" class="panel">
+                <h2 id="schemaTitle" class="pane-title"></h2>
+                <div id="schema" class="schema"></div>
+            </div>
+
+            <!-- Onglet QUIZ -->
+            <div id="panel-quiz" class="panel">
+                <h2 class="pane-title">❓ Questions probables du jury — clique pour révéler</h2>
+                <div id="quiz" class="quiz"></div>
+            </div>
+
+            <!-- Onglet GLOSSAIRE -->
+            <div id="panel-glossaire" class="panel">
+                <h2 class="pane-title">📖 Les termes à connaître (définitions simples)</h2>
+                <div id="glossaire" class="glossaire"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="foot">
+        Astuce : survole une ligne de code → son explication s'illumine (et inversement). •
+        Tout est local, aucune connexion requise.
+    </footer>
+
+    <script src="/cours/js/content.js"></script>
+    <script src="/cours/js/app.js"></script>
+</body>
+</html>
